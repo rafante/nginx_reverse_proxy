@@ -1,0 +1,33 @@
+version: "3"
+services: 
+    proxy:
+        image: nginx
+        container_name: reverse_proxy
+        depends_on: 
+            - app1
+            - app2
+        volumes: 
+            - ./reverse_proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports: 
+            - 80:80
+    app1:
+        image: app1
+        container_name: app1
+        build: 
+            context: ./app1
+        environment: 
+            - "appname=app1"
+        ports: 
+            - 3001:3000
+    app2:
+        image: app2
+        container_name: app2
+        build: 
+            context: ./app2
+        environment: 
+            - "appname=app2"
+        ports: 
+            - 3002:3000
+networks: 
+    nginx_net:
+        driver: bridge
